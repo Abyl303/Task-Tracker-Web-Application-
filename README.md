@@ -31,3 +31,49 @@ Task Tracker — CRUD веб-приложение для управления з
 Создай базу (пример):
 ```sql
 CREATE DATABASE tasks;
+
+---
+
+# 2) Запуск через Docker Compose (рекомендуется)
+
+## Требования
+- Docker 
+- Docker Compose
+
+## Файлы
+В проекте есть:
+-Dockerfile
+-docker-compose.yml
+
+## Запуск
+Из корня проекта:
+```bash
+docker compose up --build
+Открыть в браузере:
+http://localhost:8080/tasks
+
+## Остановка
+```bash
+docker compose down
+
+# 3) Ngrok (показать проект людям)
+Установка и логин:
+- Установи ngrok
+- Авторизуйся:
+```bash
+ngrok config add-authtoken YOUR_TOKEN
+Запуск туннеля:
+```bash
+ngrok http 8080
+
+Ngrok покажет публичную ссылку вида:
+
+https://xxxx-xx-xx-xx.ngrok-free.app
+
+Эту ссылку можно отправить, чтобы люди открыли твоё приложение.
+
+Author
+
+Abylaikhan Izmakhanov
+GitHub: https://github.com/Abyl303
+
