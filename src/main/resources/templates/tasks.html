@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Task Tracker</title>
+    <meta charset="UTF-8">
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin:40px;
+            background:#f4f6f8;
+        }
+
+        h1{
+            margin-bottom:20px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            background:white;
+            margin-bottom:40px;
+        }
+
+        th, td{
+            padding:10px;
+            border:1px solid #ddd;
+            text-align:left;
+        }
+
+        th{
+            background:#2c3e50;
+            color:white;
+        }
+
+        tr:nth-child(even){
+            background:#f2f2f2;
+        }
+
+        form{
+            background:white;
+            padding:20px;
+            border-radius:6px;
+            width:400px;
+        }
+
+        input, select{
+            width:100%;
+            padding:8px;
+            margin-bottom:10px;
+        }
+
+        button{
+            padding:8px 12px;
+            border:none;
+            background:#3498db;
+            color:white;
+            cursor:pointer;
+            border-radius:4px;
+        }
+
+        button:hover{
+            background:#2980b9;
+        }
+
+        .delete{
+            background:#e74c3c;
+        }
+
+        .delete:hover{
+            background:#c0392b;
+        }
+
+        .edit{
+            background:#f39c12;
+        }
+
+        .edit:hover{
+            background:#d68910;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Task Tracker</h1>
+
+<!-- FILTER -->
+<form th:action="@{/tasks}" method="get" style="margin-bottom:20px; display:flex; gap:10px; align-items:center; width:500px;">
+    <select name="priority" style="margin:0;">
+        <option value="">All priorities</option>
+        <option th:each="p : ${priorities}"
+                th:value="${p}"
+                th:text="${p}">
+        </option>
+    </select>
+
+    <button type="submit">Filter</button>
+
+    <a th:href="@{/tasks}">
+        <button type="button" style="background:#7f8c8d;">Reset</button>
+    </a>
+</form>
+
+<!-- TABLE -->
+<table>
+
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Priority</th>
+        <th>Due Date</th>
+        <th>Created</th>
+        <th>Updated</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <tr th:each="t : ${tasks}">
+        <td th:text="${t.id}"></td>
+        <td th:text="${t.title}"></td>
+        <td th:text="${t.description}"></td>
+        <td th:text="${t.status}"></td>
+        <td th:text="${t.priority}"></td>
+        <td th:text="${t.dueDate}"></td>
+        <td th:text="${t.createdAt}"></td>
+        <td th:text="${t.updatedAt}"></td>
+
+        <td>
+
+            <!-- EDIT -->
+            <a th:href="@{/tasks(editId=${t.id})}">
+                <button class="edit">Edit</button>
+            </a>
+
+            <!-- DELETE -->
+            <form th:action="@{/tasks/{id}/delete(id=${t.id})}" method="post" style="display:inline">
+                <button class="delete" type="submit">Delete</button>
+            </form>
+
+        </td>
+
+    </tr>
+
+    </tbody>
+
+</table>
+
+<!-- FORM -->
+<h2 th:text="${editMode} ? 'Edit Task' : 'Create Task'"></h2>
+
+<form th:action="${editMode} ? @{/tasks/{id}(id=${task.id})} : @{/tasks}"
+      method="post"
+      th:object="${task}">
+
+    <label>Title</label>
+    <input type="text" th:field="*{title}" required>
+
+    <label>Description</label>
+    <input type="text" th:field="*{description}" required>
+
+    <label>Status</label>
+    <select th:field="*{status}">
+        <option th:each="s : ${statuses}"
+                th:value="${s}"
+                th:text="${s}">
+        </option>
+    </select>
+
+    <label>Priority</label>
+    <select th:field="*{priority}">
+        <option th:each="p : ${priorities}"
+                th:value="${p}"
+                th:text="${p}">
+        </option>
+    </select>
+
+    <label>Due Date</label>
+    <input type="date" th:field="*{dueDate}">
+
+    <button type="submit"
+            th:text="${editMode} ? 'Update Task' : 'Create Task'">
+    </button>
+
+</form>
+
+
+</body>
+</html>
